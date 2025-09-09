@@ -1,0 +1,37 @@
+server:
+  port: 8080
+  forward-headers-strategy: framework
+
+spring:
+  application:
+    name: gateway
+
+  cloud:
+    gateway:
+      server:
+        webflux:
+          # default-filters:  <<== 이 블록 통째로 삭제 또는 주석 처리
+          #   - RemoveHopByHopHeaders=connection,keep-alive,proxy-authenticate,proxy-authorization,te,trailers,transfer-encoding,upgrade
+          routes:
+            - id: auth-through-userservice
+              uri: lb://userservice
+              predicates:
+                - Path=/auth/**
+              filters:
+                - PreserveHostHeader
+
+            - id: userservice
+              uri: lb://userservice
+              predicates:
+                - Path=/user/**
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
