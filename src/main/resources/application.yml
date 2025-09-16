@@ -1,0 +1,46 @@
+JWT_SECRET_BASE64: ${JWT_SECRET_BASE64}
+
+server:
+  port: 8080
+  forward-headers-strategy: framework
+
+spring:
+  application:
+    name: gateway
+
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            # OAuth2 시작/콜백을 userservice로 프록시
+            - id: oauth2-proxy
+              uri: lb://userservice
+              predicates:
+                - Path=/oauth2/**,/login/**,/auth/**
+              filters:
+                - PreserveHostHeader
+
+            # 기존 라우트들
+            - id: auth-through-userservice
+              uri: lb://userservice
+              predicates:
+                - Path=/auth/**
+              filters:
+                - PreserveHostHeader
+
+            - id: userservice
+              uri: lb://userservice
+              predicates:
+                - Path=/user/**
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
