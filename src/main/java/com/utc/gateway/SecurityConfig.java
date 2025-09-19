@@ -35,7 +35,7 @@ public class SecurityConfig {
 
     // ✅ Boot/Cloud 최신 조합에서 확실히 인식되도록 직접 등록
     @Bean
-    public ReactiveJwtDecoder jwtDecoder(@Value("${JWT_SECRET_BASE64}") String base64) {
+    public ReactiveJwtDecoder jwtDecoder(@Value("${security.jwt.secret-base64}") String base64) {
         byte[] keyBytes = Base64.getDecoder().decode(base64);
         SecretKey key = new SecretKeySpec(keyBytes, "HmacSHA256");
         return NimbusReactiveJwtDecoder
