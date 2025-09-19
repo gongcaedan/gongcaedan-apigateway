@@ -1,5 +1,3 @@
-JWT_SECRET_BASE64: ${JWT_SECRET_BASE64}
-
 server:
   port: 8080
   forward-headers-strategy: framework
