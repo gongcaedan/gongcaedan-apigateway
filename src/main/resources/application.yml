@@ -32,6 +32,20 @@ spring:
               predicates:
                 - Path=/user/**
 
+            - id: pledge-tracker
+              uri: lb://pledge-tracker
+              predicates:
+                - Path=/api/pledges/**,/api/milestones/**,/api/milestone-logs/**
+              filters:
+                - PreserveHostHeader
+
+            - id: gongcaedan_candidate
+              uri: lb://gongcaedan_candidate
+              predicates:
+                - Path=/api/candidates/**,/api/parties/**
+              filters:
+                - PreserveHostHeader
+                -
 security:
   jwt:
     secret-base64: ${JWT_SECRET_BASE64}
