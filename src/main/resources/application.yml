@@ -45,7 +45,7 @@ spring:
                 - Path=/api/candidates/**,/api/parties/**
               filters:
                 - PreserveHostHeader
-                -
+
 security:
   jwt:
     secret-base64: ${JWT_SECRET_BASE64}
