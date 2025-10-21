@@ -19,24 +19,32 @@ import java.util.Base64;
 @EnableWebFluxSecurity
 public class SecurityConfig {
 
+    @Value("${security.jwt.secret-base64}")
+    private String jwtSecretBase64;
+
     @Bean
-    public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
+    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
         return http
-            .csrf(ServerHttpSecurity.CsrfSpec::disable)
-            .authorizeExchange(ex -> ex
-                .pathMatchers("/actuator/**").permitAll()
-                .pathMatchers("/auth/**").permitAll()
-                .pathMatchers("/oauth2/**", "/login/**").permitAll()
-                .anyExchange().authenticated()
-            )
-            .oauth2ResourceServer(o -> o.jwt(Customizer.withDefaults()))
-            .build();
+                .csrf(ServerHttpSecurity.CsrfSpec::disable)
+                .authorizeExchange(exchange -> exchange
+                        .pathMatchers(
+                                "/actuator/**",
+                                "/api/auth/**",
+                                "/oauth2/**",
+                                "/login/**"
+                        ).permitAll()
+                        .anyExchange().authenticated()
+                )
+                .oauth2ResourceServer(oauth2 -> oauth2
+                        .jwt(jwt -> jwt.jwtDecoder(jwtDecoder()))
+                )
+                .build();
     }
 
     // ✅ Boot/Cloud 최신 조합에서 확실히 인식되도록 직접 등록
     @Bean
-    public ReactiveJwtDecoder jwtDecoder(@Value("${security.jwt.secret-base64}") String base64) {
-        byte[] keyBytes = Base64.getDecoder().decode(base64);
+    public ReactiveJwtDecoder jwtDecoder() {
+        byte[] keyBytes = Base64.getDecoder().decode(jwtSecretBase64);
         SecretKey key = new SecretKeySpec(keyBytes, "HmacSHA256");
         return NimbusReactiveJwtDecoder
                 .withSecretKey(key)
