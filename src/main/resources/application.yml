@@ -29,6 +29,7 @@ spring:
             - Path=/user/**,/login/**,/oauth2/**,/auth/**
           filters:
             - PreserveHostHeader
+            - AddRequestHeader=Authorization, "#{request.headers.Authorization}"
 
         - id: pledge-tracker
           uri: lb://pledge-tracker
@@ -36,6 +37,7 @@ spring:
             - Path=/api/pledges/**,/api/milestones/**,/api/milestone-logs/**
           filters:
             - PreserveHostHeader
+            - AddRequestHeader=Authorization, "#{request.headers.Authorization}"
 
         - id: gongcaedan_candidate
           uri: lb://gongcaedan_candidate
@@ -43,14 +45,4 @@ spring:
             - Path=/api/candidates/**,/api/parties/**
           filters:
             - PreserveHostHeader
-
-security:
-  jwt:
-    secret-base64: ${JWT_SECRET_BASE64}
-
-eureka:
-  client:
-    register-with-eureka: true
-    fetch-registry: true
-    service-url:
-      defaultZone: http://eurekaserver:8761/eureka
+            - AddRequestHeader=Authorization, "#{request.headers.Authorization}"
