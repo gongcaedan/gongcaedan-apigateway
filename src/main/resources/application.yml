@@ -29,7 +29,6 @@ spring:
             - Path=/user/**,/login/**,/oauth2/**,/auth/**
           filters:
             - PreserveHostHeader
-            - AddRequestHeader=Authorization, "#{request.headers.Authorization}"
 
         - id: pledge-tracker
           uri: lb://pledge-tracker
@@ -46,3 +45,14 @@ spring:
           filters:
             - PreserveHostHeader
             - AddRequestHeader=Authorization, "#{request.headers.Authorization}"
+
+security:
+  jwt:
+    secret-base64: ${JWT_SECRET_BASE64}
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://eurekaserver:8761/eureka
