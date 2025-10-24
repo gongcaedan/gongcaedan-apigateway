@@ -36,7 +36,6 @@ spring:
             - Path=/api/pledges/**,/api/milestones/**,/api/milestone-logs/**
           filters:
             - PreserveHostHeader
-            - AddRequestHeader=Authorization, "#{request.headers.Authorization}"
 
         - id: gongcaedan_candidate
           uri: lb://gongcaedan_candidate
@@ -44,7 +43,6 @@ spring:
             - Path=/api/candidates/**,/api/parties/**
           filters:
             - PreserveHostHeader
-            - AddRequestHeader=Authorization, "#{request.headers.Authorization}"
 
 security:
   jwt:
