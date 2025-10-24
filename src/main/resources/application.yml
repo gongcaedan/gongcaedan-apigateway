@@ -33,14 +33,17 @@ spring:
         - id: pledge-tracker
           uri: lb://pledge-tracker
           predicates:
-            - Path=/api/pledges/**,/api/milestones/**,/api/milestone-logs/**
+            - Path=/api/pledges/**
+            - Path=/api/milestones/**
+            - Path=/api/milestone-logs/**
           filters:
             - PreserveHostHeader
 
-        - id: gongcaedan_candidate
-          uri: lb://gongcaedan_candidate
+        - id: candidate
+          uri: lb://candidate
           predicates:
-            - Path=/api/candidates/**,/api/parties/**
+            - Path=/api/candidates/**
+            - Path=/api/parties/**
           filters:
             - PreserveHostHeader
 
